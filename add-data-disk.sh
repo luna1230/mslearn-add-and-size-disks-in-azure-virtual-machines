@@ -25,10 +25,10 @@ EOF
 sudo mkfs -t ext4 /dev/sdc1
 
 # Create the /uploads directory, which we'll use as our mount point.
-sudo mkdir /uploads
+sudo mkdir /data
 
 # Attach the disk to the mount point.
-sudo mount /dev/sdc1 /uploads
+sudo mount /dev/sdc1 /data
 
 # Get the UUID of the new drive, /dev/sdc1, and save it as a variable.
 UUID=$(sudo -i blkid | grep '/dev/sdc1' | perl -pe 's/.+([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}).+/$1/')
@@ -36,7 +36,7 @@ UUID=$(sudo -i blkid | grep '/dev/sdc1' | perl -pe 's/.+([a-f0-9]{8}-[a-f0-9]{4}
 # Add the UUID to /etc/fstab so that the drive is mounted automatically after reboot.
 # We use the UUID instead of the device name (/dev/sdc1) because the UUID avoids the incorrect 
 # disk from being mounted if the OS detects a disk error during boot.
-echo "UUID=${UUID}    /uploads    ext4    defaults,nofail    1    2" | sudo tee --append /etc/fstab
+echo "UUID=${UUID}    /data    ext4    defaults,nofail    1    2" | sudo tee --append /etc/fstab
 
 # Refresh the mount points.
 sudo mount -a
