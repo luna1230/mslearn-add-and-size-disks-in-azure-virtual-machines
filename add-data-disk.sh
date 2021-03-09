@@ -9,7 +9,7 @@
 #  the following blank line accepts the default final sector.
 #  p prints the partition table.
 #  w writes the changes and exits.
-temp=$(ll /dev/disk/azure/scsi1/lun0)
+temp=$(ls -l /dev/disk/azure/scsi1/lun0)
 disk=${temp##*../}
 echo "disk is "${disk}
 sudo fdisk /dev/${disk} <<EOF
