@@ -9,7 +9,10 @@
 #  the following blank line accepts the default final sector.
 #  p prints the partition table.
 #  w writes the changes and exits.
-sudo fdisk /dev/sdc <<EOF
+temp=$(ll /dev/disk/azure/scsi1/lun0)
+disk=${temp##*../}
+echo "disk is "${disk}
+sudo fdisk /dev/${disk} <<EOF
 n
 p
 
@@ -22,13 +25,13 @@ EOF
 # Write a file system to the partition.
 #  ext4 creates an ext4 filesystem.
 #  /dev/sdc1 is the device name.
-sudo mkfs -t ext4 /dev/sdc1
+sudo mkfs -t ext4 /dev/${disk}1
 
 # Create the /uploads directory, which we'll use as our mount point.
 sudo mkdir /data
 
 # Attach the disk to the mount point.
-sudo mount /dev/sdc1 /data
+sudo mount /dev/${disk}1 /data
 
 # Get the UUID of the new drive, /dev/sdc1, and save it as a variable.
 UUID=$(sudo -i blkid | grep '/dev/sdc1' | perl -pe 's/.+([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}).+/$1/')
